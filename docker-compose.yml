@@ -1,32 +1,36 @@
 version: '3.9'
 
 services:
-  postgres:
+  db:
     image: postgres
     volumes:
-      - postgres_data:/var/lib/postgresql/data/
+      - db_data:/var/lib/postgresql/data/
     ports:
-      - 5099:5432
+      - 5099:${DB_PORT}
     environment:
-      - POSTGRES_NAME=${DB_NAME}
+      - POSTGRES_DB=${DB_NAME}
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_USER_PASSWORD}
-  
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      timeout: 1s
+      retries: 3
+
   backend:
     build: .
-    command: sh -c "python manage.py collectstatic --noinput &&
-             python manage.py migrate &&
+    command: sh -c "python manage.py migrate &&
              python manage.py runserver 0.0.0.0:8000"
     volumes:
       - ./app:/app
     ports:
       - "8000:8000"
     environment:
-      - DB_NANE=postgres_db_name
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - DB_NANE=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_USER_PASSWORD}
     depends_on:
-      - postgres
+      db:
+        condition: service_healthy
 
 volumes:
-  postgres_data:
+  db_data:

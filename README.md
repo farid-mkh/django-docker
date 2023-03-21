@@ -1,6 +1,6 @@
-# Dajngo-Docker
+# Dajngo-Postgres-Docker
 
-This app includes the following components:
+This branch includes the following components:
 
 1. django
 2. postgres
