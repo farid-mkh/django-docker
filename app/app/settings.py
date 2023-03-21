@@ -77,11 +77,12 @@ WSGI_APPLICATION = 'app.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ.get('DB_NAME'),
+        'NAME': os.environ.get('DB_NAME','db_name'),
         'USER': os.environ.get('DB_USER'),
-        'PASSWORD': os.environ.get('DB_USER_PASSWORD'),
-        'HOST': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_USER_PASSWORD','password'),
+        'HOST': "django-docker-template_mysql_1",
         'PORT': os.environ.get('DB_PORT'),
+        'default-character-set': 'utf8',
     }
 }
 
