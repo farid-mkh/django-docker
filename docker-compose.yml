@@ -1,32 +1,42 @@
 version: '3.9'
 
 services:
-  postgres:
-    image: postgres
+  mysql:
+    image: mysql:5.7
+    platform: linux/amd64
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     volumes:
-      - postgres_data:/var/lib/postgresql/data/
+      - db:/var/lib/mysql
     ports:
-      - 5099:5432
+      - ${DB_PORT}:${DB_PORT}
     environment:
-      - POSTGRES_NAME=${DB_NAME}
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_USER_PASSWORD}
+      - MYSQL_NAME=${DB_NAME}
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_ROOT_PASSWORD=${DB_USER_PASSWORD}
+
+  # redis:
+  #   image: redis:alpine
+  #   expose:
+  #     - "6379"
+  #   restart: always
   
   backend:
     build: .
-    command: sh -c "python manage.py collectstatic --noinput &&
-             python manage.py migrate &&
+    command: sh -c "python manage.py migrate &&
              python manage.py runserver 0.0.0.0:8000"
     volumes:
       - ./app:/app
     ports:
       - "8000:8000"
     environment:
-      - DB_NANE=postgres_db_name
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - DB_NANE=${DB_NAME}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_USER_PASSWORD}
     depends_on:
-      - postgres
+      - mysql
+      # - redis
 
 volumes:
-  postgres_data:
+  db:
