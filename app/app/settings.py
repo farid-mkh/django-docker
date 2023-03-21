@@ -80,7 +80,7 @@ DATABASES = {
         'NAME': os.environ.get('DB_NAME','db_name'),
         'USER': os.environ.get('DB_USER'),
         'PASSWORD': os.environ.get('DB_USER_PASSWORD','password'),
-        'HOST': "django-docker-template_mysql_1",
+        'HOST': "django-docker-template_db_1",
         'PORT': os.environ.get('DB_PORT'),
         'default-character-set': 'utf8',
     }

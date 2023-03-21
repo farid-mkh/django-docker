@@ -1,8 +1,8 @@
-# Dajngo-Docker
+# Dajngo-MySQL-Docker
 
-This app includes the following components:
+This branch includes the following components:
 
 1. django
-2. postgres
+2. mysql
 3. docker
 
